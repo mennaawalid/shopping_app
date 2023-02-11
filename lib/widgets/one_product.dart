@@ -131,7 +131,7 @@ class ProductItem extends StatelessWidget {
                 child: Hero(
                   tag: data.id!,
                   child: CachedNetworkImage(
-                    fit: BoxFit.contain,
+                    fit: BoxFit.fitWidth,
                     imageUrl: data.imageURl!,
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),

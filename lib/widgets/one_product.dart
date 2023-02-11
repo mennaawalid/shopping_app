@@ -22,108 +22,108 @@ class ProductItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       elevation: 5,
-      child: GridTile(
-          footer: Card(
-            margin: EdgeInsets.zero,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context)
+              .pushNamed(ProductDetails.routeName, arguments: data.id);
+        },
+        child: GridTile(
+            footer: Card(
+              margin: EdgeInsets.zero,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+              ),
+              elevation: 0,
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          data.name!,
+                          softWrap: false,
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          style: const TextStyle(
+                              fontSize: 17, color: ColorPalettes.darker),
+                        ),
+                        Text(
+                          "\$${data.price!.toString()}",
+                          overflow: TextOverflow.fade,
+                          style: const TextStyle(
+                              color: ColorPalettes.dark,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w900),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.shopping_cart,
+                      color: ColorPalettes.dark,
+                    ),
+                    onPressed: () {
+                      cart.addToCart(
+                          imageURL: data.imageURl!,
+                          name: data.name!,
+                          productId: data.id!,
+                          price: data.price!);
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text("Item added to cart!"),
+                          backgroundColor: Colors.brown,
+                          duration: const Duration(seconds: 2),
+                          action: SnackBarAction(
+                              textColor: ColorPalettes.light,
+                              label: "UNDO!",
+                              onPressed: () {
+                                cart.decreaseQuantityOrRemove(data.id!);
+                              }),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
-            elevation: 0,
-            color: Colors.white,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        data.name!,
-                        softWrap: false,
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                        style: const TextStyle(
-                            fontSize: 17, color: ColorPalettes.darker),
-                      ),
-                      Text(
-                        "\$${data.price!.toString()}",
-                        overflow: TextOverflow.fade,
-                        style: const TextStyle(
-                            color: ColorPalettes.dark,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ],
-                  ),
+            header: GridTileBar(
+              leading: Card(
+                shadowColor: Colors.white,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50.0),
                 ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.shopping_cart,
-                    color: ColorPalettes.dark,
+                child: IconButton(
+                  padding: const EdgeInsets.fromLTRB(3, 5, 3, 3),
+                  //  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  icon: Icon(
+                    Icons.favorite,
+                    color: data.isFavorite == false
+                        ? const Color.fromARGB(255, 162, 153, 153)
+                        : const Color.fromARGB(255, 247, 170, 196),
+                    // ColorPalettes.dark,
                   ),
                   onPressed: () {
-                    cart.addToCart(
-                        imageURL: data.imageURl!,
-                        name: data.name!,
-                        productId: data.id!,
-                        price: data.price!);
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text("Item added to cart!"),
-                        backgroundColor: Colors.brown,
-                        duration: const Duration(seconds: 2),
-                        action: SnackBarAction(
-                            textColor: ColorPalettes.light,
-                            label: "UNDO!",
-                            onPressed: () {
-                              cart.decreaseQuantityOrRemove(data.id!);
-                            }),
-                      ),
-                    );
+                    data.addAndRemoveFromFavs();
+
+                    if (data.isFavorite == true) {
+                      products.addToFavs(data.id!);
+                    } else {
+                      products.removeFromFavs(data.id!);
+                    }
                   },
                 ),
-              ],
-            ),
-          ),
-          header: GridTileBar(
-            leading: Card(
-              shadowColor: Colors.white,
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              child: IconButton(
-                padding: const EdgeInsets.fromLTRB(3, 5, 3, 3),
-                //  padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                icon: Icon(
-                  Icons.favorite,
-                  color: data.isFavorite == false
-                      ? const Color.fromARGB(255, 162, 153, 153)
-                      : const Color.fromARGB(255, 247, 170, 196),
-                  // ColorPalettes.dark,
-                ),
-                onPressed: () {
-                  data.addAndRemoveFromFavs();
-
-                  if (data.isFavorite == true) {
-                    products.addToFavs(data.id!);
-                  } else {
-                    products.removeFromFavs(data.id!);
-                  }
-                },
               ),
             ),
-          ),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context)
-                  .pushNamed(ProductDetails.routeName, arguments: data.id);
-            },
             child: SizedBox(
               width: double.infinity,
               child: ClipRRect(
@@ -138,8 +138,8 @@ class ProductItem extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          )),
+            )),
+      ),
     );
   }
 }

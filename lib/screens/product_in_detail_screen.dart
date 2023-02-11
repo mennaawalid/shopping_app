@@ -59,22 +59,24 @@ class ProductDetails extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
+            Container(
+              height: MediaQuery.of(context).size.height * 0.3,
               padding:
                   EdgeInsets.all(MediaQuery.of(context).size.height * 0.015),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
                     flex: 2,
                     child: Text(
-                      overflow: TextOverflow.fade,
+                      maxLines: 3,
                       loadedProduct.description!,
                       style: const TextStyle(
                         letterSpacing: 0.9,
                         color: ColorPalettes.darker,
                         fontWeight: FontWeight.w500,
-                        fontSize: 26,
+                        fontSize: 18,
                       ),
                     ),
                   ),
@@ -84,7 +86,7 @@ class ProductDetails extends StatelessWidget {
                       overflow: TextOverflow.fade,
                       style: const TextStyle(
                           color: ColorPalettes.darker,
-                          fontSize: 24,
+                          fontSize: 22,
                           fontWeight: FontWeight.w900),
                     ),
                   )
@@ -123,10 +125,11 @@ class ProductDetails extends StatelessWidget {
               ),
               onPressed: () {
                 cart.addToCart(
-                    imageURL: loadedProduct.imageURl!,
-                    name: loadedProduct.name!,
-                    productId: loadedProduct.id!,
-                    price: loadedProduct.price!);
+                  imageURL: loadedProduct.imageURl!,
+                  name: loadedProduct.name!,
+                  productId: loadedProduct.id!,
+                  price: loadedProduct.price!,
+                );
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(addedToCartSnackbar);
               },

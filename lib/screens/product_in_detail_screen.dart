@@ -46,8 +46,8 @@ class ProductDetails extends StatelessWidget {
           children: [
             Card(
               elevation: 0,
-              child: AspectRatio(
-                aspectRatio: 1.1,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
                 child: Hero(
                   tag: productId,
                   child: CachedNetworkImage(
@@ -59,16 +59,37 @@ class ProductDetails extends StatelessWidget {
                 ),
               ),
             ),
-            Text(
-              overflow: TextOverflow.fade,
-              loadedProduct.description!,
-              style: const TextStyle(
-                letterSpacing: 0.9,
-                color: ColorPalettes.darker,
-                fontWeight: FontWeight.w500,
-                fontSize: 27,
+            Padding(
+              padding:
+                  EdgeInsets.all(MediaQuery.of(context).size.height * 0.015),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    flex: 2,
+                    child: Text(
+                      overflow: TextOverflow.fade,
+                      loadedProduct.description!,
+                      style: const TextStyle(
+                        letterSpacing: 0.9,
+                        color: ColorPalettes.darker,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 26,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: Text(
+                      "\$${loadedProduct.price!}",
+                      overflow: TextOverflow.fade,
+                      style: const TextStyle(
+                          color: ColorPalettes.darker,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900),
+                    ),
+                  )
+                ],
               ),
-              textAlign: TextAlign.center,
             ),
           ],
         ),
@@ -76,15 +97,6 @@ class ProductDetails extends StatelessWidget {
       bottomSheet: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            "\$${loadedProduct.price!}",
-            overflow: TextOverflow.fade,
-            style: const TextStyle(
-                color: ColorPalettes.darker,
-                fontSize: 20,
-                fontWeight: FontWeight.w900),
-          ),
-          const Spacer(),
           IconButton(
             icon: Icon(
               Icons.favorite,
@@ -103,17 +115,22 @@ class ProductDetails extends StatelessWidget {
               }
             },
           ),
-          ElevatedButton(
-            child: const Text("ADD TO CART"),
-            onPressed: () {
-              cart.addToCart(
-                  imageURL: loadedProduct.imageURl!,
-                  name: loadedProduct.name!,
-                  productId: loadedProduct.id!,
-                  price: loadedProduct.price!);
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(addedToCartSnackbar);
-            },
+          Expanded(
+            child: ElevatedButton(
+              child: const Text(
+                "ADD TO CART",
+                style: TextStyle(fontSize: 18),
+              ),
+              onPressed: () {
+                cart.addToCart(
+                    imageURL: loadedProduct.imageURl!,
+                    name: loadedProduct.name!,
+                    productId: loadedProduct.id!,
+                    price: loadedProduct.price!);
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(addedToCartSnackbar);
+              },
+            ),
           ),
         ],
       ),

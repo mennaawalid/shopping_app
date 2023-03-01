@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shopping/models/http_exception.dart';
 import 'package:shopping/providers/products.dart';
 
 import 'package:http/http.dart' as http;
@@ -45,11 +46,11 @@ class Products with ChangeNotifier {
     // ),
     // ProductInfo(
     //   id: 'p2',
-    //   name: 'Trousers, black, straight leg style',
-    //   description: 'A nice pair of trousers.',
-    //   price: 59.99,
-    //   imageURl:
-    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+    // name: 'Trousers, black, straight leg style',
+    // description: 'A nice pair of trousers.',
+    // price: 59.99,
+    // imageURl:
+    //     'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
     // ),
     // ProductInfo(
     //   id: 'p3',
@@ -69,27 +70,12 @@ class Products with ChangeNotifier {
     // ),
   ];
 
-  final List<ProductInfo> _favItems = [];
-
   List<ProductInfo> get items {
     return [..._items];
   }
 
   List<ProductInfo> get favItems {
-    return [..._favItems];
-    // return _items.where((element) => element.isFavorite!).toList();
-  }
-
-  void addToFavs(String id) {
-    ProductInfo value = findById(id);
-    _favItems.add(value);
-    notifyListeners();
-  }
-
-  void removeFromFavs(String id) {
-    ProductInfo value = findById(id);
-    _favItems.remove(value);
-    notifyListeners();
+    return _items.where((element) => element.isFavorite!).toList();
   }
 
   ProductInfo findById(String id) {
@@ -123,9 +109,6 @@ class Products with ChangeNotifier {
 
       _items = loadedProducts;
       notifyListeners();
-      print(
-        json.decode(response.body),
-      );
     } catch (error) {
       throw error;
     }
@@ -156,21 +139,45 @@ class Products with ChangeNotifier {
       _items.insert(0, newProduct); // adds to the beginning of the list
       notifyListeners();
     } catch (error) {
-      print(error);
       throw error;
     }
   }
 
-  void editProduct(ProductInfo newProduct) {
+  Future<void> editProduct(ProductInfo newProduct) async {
     final index = _items.indexWhere((prod) => prod.id == newProduct.id);
     if (index >= 0) {
+      final url =
+          'https://shopping-ae175-default-rtdb.firebaseio.com/products/${newProduct.id}.json';
+      await http.patch(Uri.parse(url),
+          body: json.encode({
+            'title': newProduct.name,
+            'description': newProduct.description,
+            'imageUrl': newProduct.imageURl,
+            'price': newProduct.price
+          }));
       _items[index] = newProduct;
       notifyListeners();
     }
   }
 
-  void removeProduct(String productID) {
+  Future<void> removeProduct(String productID) async {
+    final url =
+        'https://shopping-ae175-default-rtdb.firebaseio.com/products/$productID.json';
+    final existingProductIndex =
+        _items.indexWhere((prod) => prod.id == productID);
+    ProductInfo? exisitingProduct = _items[existingProductIndex];
     _items.removeWhere((prod) => prod.id == productID);
     notifyListeners();
+
+    final response = await http.delete(
+      Uri.parse(url),
+    );
+
+    if (response.statusCode >= 400) {
+      _items.insert(existingProductIndex, exisitingProduct);
+      notifyListeners();
+      throw HttpException('Couldn\'t delete product!');
+    }
+    exisitingProduct = null;
   }
 }

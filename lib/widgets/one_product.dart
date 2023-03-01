@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:shopping/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shopping/providers/products.dart';
-import 'package:shopping/providers/products_provider.dart';
 import 'package:shopping/screens/product_in_detail_screen.dart';
 
 import '../providers/cart.dart';
@@ -14,7 +13,6 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<ProductInfo>(context);
-    final products = Provider.of<Products>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
 
     return Card(
@@ -102,26 +100,19 @@ class ProductItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50.0),
                 ),
                 child: IconButton(
-                  padding: const EdgeInsets.fromLTRB(3, 5, 3, 3),
-                  //  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                  icon: Icon(
-                    Icons.favorite,
-                    color: data.isFavorite == false
-                        ? const Color.fromARGB(255, 162, 153, 153)
-                        : const Color.fromARGB(255, 247, 170, 196),
-                    // ColorPalettes.dark,
-                  ),
-                  onPressed: () {
-                    data.addAndRemoveFromFavs();
-
-                    if (data.isFavorite == true) {
-                      products.addToFavs(data.id!);
-                    } else {
-                      products.removeFromFavs(data.id!);
-                    }
-                  },
-                ),
+                    padding: const EdgeInsets.fromLTRB(3, 5, 3, 3),
+                    //  padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    icon: Icon(
+                      Icons.favorite,
+                      color: data.isFavorite == false
+                          ? const Color.fromARGB(255, 162, 153, 153)
+                          : const Color.fromARGB(255, 247, 170, 196),
+                      // ColorPalettes.dark,
+                    ),
+                    onPressed: () async {
+                      data.addAndRemoveFromFavs();
+                    }),
               ),
             ),
             child: SizedBox(

@@ -17,7 +17,6 @@ class ProductDetails extends StatelessWidget {
     final productId = ModalRoute.of(context)!.settings.arguments as String;
     final loadedProduct =
         Provider.of<Products>(context, listen: false).findById(productId);
-    final product = Provider.of<Products>(context);
 
     SnackBar addedToCartSnackbar = SnackBar(
       content: const Text("Item added to cart!"),
@@ -109,12 +108,6 @@ class ProductDetails extends StatelessWidget {
             ),
             onPressed: () {
               loadedProduct.addAndRemoveFromFavs();
-
-              if (loadedProduct.isFavorite == true) {
-                product.addToFavs(loadedProduct.id!);
-              } else {
-                product.removeFromFavs(loadedProduct.id!);
-              }
             },
           ),
           Expanded(

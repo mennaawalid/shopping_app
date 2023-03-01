@@ -16,6 +16,8 @@ class UserProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final navigator = Navigator.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
@@ -56,10 +58,23 @@ class UserProductItem extends StatelessWidget {
                           child: const Text('No'),
                         ),
                         TextButton(
-                          onPressed: () {
-                            Provider.of<Products>(context, listen: false)
-                                .removeProduct(id!);
-                            Navigator.of(context).pop();
+                          onPressed: () async {
+                            try {
+                              await Provider.of<Products>(context,
+                                      listen: false)
+                                  .removeProduct(id!);
+                            } catch (error) {
+                              scaffoldMessenger.showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Couldn\'t delete!',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                              Navigator.of(context).pop();
+                            }
+                            navigator.pop();
                           },
                           child: const Text('Yes'),
                         ),

@@ -68,6 +68,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   Future<void> _saveForm() async {
+    final navigator = Navigator.of(context);
     final isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
@@ -127,7 +128,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       _isLoading = false;
     });
 
-    Navigator.of(context).pop();
+    navigator.pop();
   }
 
   @override

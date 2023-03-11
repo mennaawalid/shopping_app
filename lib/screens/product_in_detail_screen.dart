@@ -6,6 +6,8 @@ import 'package:shopping/providers/cart.dart';
 import 'package:shopping/providers/products_provider.dart';
 import 'package:shopping/screens/cart_screen.dart';
 
+import '../providers/auth.dart';
+
 class ProductDetails extends StatelessWidget {
   static const routeName = '/product_detail';
 
@@ -17,6 +19,7 @@ class ProductDetails extends StatelessWidget {
     final productId = ModalRoute.of(context)!.settings.arguments as String;
     final loadedProduct =
         Provider.of<Products>(context, listen: false).findById(productId);
+    final authDetails = Provider.of<Auth>(context, listen: false);
 
     SnackBar addedToCartSnackbar = SnackBar(
       content: const Text("Item added to cart!"),
@@ -107,7 +110,8 @@ class ProductDetails extends StatelessWidget {
               size: 30.0,
             ),
             onPressed: () {
-              loadedProduct.addAndRemoveFromFavs();
+              loadedProduct.addAndRemoveFromFavs(
+                  authDetails.token, authDetails.userId);
             },
           ),
           Expanded(

@@ -1,7 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shopping/constants.dart';
+import 'package:shopping/models/http_exception.dart';
+
+import '../providers/auth.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -71,7 +75,27 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('An Error Occurred!'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () { 
+                Navigator.of(context).pop();
+              },
+              child: const Text('Okay'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
       return;
@@ -80,10 +104,33 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-    } else {
-      // Sign user up
+    try {
+      if (_authMode == AuthMode.Login) {
+        // Log user in
+        await Provider.of<Auth>(context, listen: false)
+            .logIn(_authData['email']!, _authData['password']!);
+      } else {
+        // sign up for the first time
+        await Provider.of<Auth>(context, listen: false)
+            .signUp(_authData['email']!, _authData['password']!);
+      }
+    } on HttpException catch (error) {
+      var errorMessage = 'Authentication failed!';
+      if (error.message.contains('INVALID_PASSWORD')) {
+        errorMessage = 'This password is incorrect';
+      } else if (error.message.contains('INVALID_EMAIL')) {
+        errorMessage = 'Invalid email!';
+      } else if (error.message.contains('EMAIL_EXISTS')) {
+        errorMessage = 'An account already exists with that email';
+      } else if (error.message.contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'Couldn\'t find a user with that email';
+      } else if (error.message.contains('WEAK_PASSWORD')) {
+        errorMessage = 'Your password is weark';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      const errorMessage = 'Authentication failed! Try again later';
+      _showErrorDialog(errorMessage);
     }
     setState(() {
       _isLoading = false;
@@ -171,7 +218,14 @@ class _AuthCardState extends State<AuthCard> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30.0, vertical: 8.0),
                   ),
-                  onPressed: _submit,
+                  onPressed: () {
+                    _submit();
+                    FocusScopeNode currentFocus = FocusScope.of(context);
+
+                    if (!currentFocus.hasPrimaryFocus) {
+                      currentFocus.unfocus();
+                    }
+                  },
                   child:
                       Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
                 ),

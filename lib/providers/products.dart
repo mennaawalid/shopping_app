@@ -21,18 +21,18 @@ class ProductInfo with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  Future<void> addAndRemoveFromFavs() async {
+  Future<void> addAndRemoveFromFavs(String? token, String userId) async {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite!;
     notifyListeners();
     final url =
-        'https://shopping-ae175-default-rtdb.firebaseio.com/products/$id.json';
+        'https://shopping-ae175-default-rtdb.firebaseio.com/userFavorites/$userId/$id.json?auth=$token';
 
     try {
-      final response = await http.patch(
+      final response = await http.put(
         Uri.parse(url),
         body: json.encode(
-          {'isFavorite': isFavorite},
+          isFavorite,
         ),
       );
       if (response.statusCode >= 400) {

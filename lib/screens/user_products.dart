@@ -13,7 +13,6 @@ class UserProductsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productData = Provider.of<Products>(context);
     return Scaffold(
       drawer: const MyDrawer(),
       appBar: AppBar(
@@ -35,22 +34,38 @@ class UserProductsScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Provider.of<Products>(context, listen: false)
-              .fetchAndSetProducts();
+      body: FutureBuilder(
+        future: Provider.of<Products>(context, listen: false)
+            .fetchAndSetProducts(true),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return RefreshIndicator(
+              onRefresh: () async {
+                await Provider.of<Products>(context, listen: false)
+                    .fetchAndSetProducts(true);
+              },
+              child: Consumer<Products>(
+                builder: (context, productData, _) {
+                  return ListView.separated(
+                      itemBuilder: (_, i) {
+                        return UserProductItem(
+                            id: productData.items[i].id,
+                            imageURL: productData.items[i].imageURl,
+                            name: productData.items[i].name);
+                      },
+                      separatorBuilder: ((_, index) {
+                        return const Divider();
+                      }),
+                      itemCount: productData.items.length);
+                },
+              ),
+            );
+          }
         },
-        child: ListView.separated(
-            itemBuilder: (_, i) {
-              return UserProductItem(
-                  id: productData.items[i].id,
-                  imageURL: productData.items[i].imageURl,
-                  name: productData.items[i].name);
-            },
-            separatorBuilder: ((_, index) {
-              return const Divider();
-            }),
-            itemCount: productData.items.length),
       ),
     );
   }

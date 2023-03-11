@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shopping/providers/auth.dart';
 import 'package:shopping/providers/products.dart';
 import 'package:shopping/screens/product_in_detail_screen.dart';
 
@@ -13,6 +14,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = Provider.of<ProductInfo>(context);
+    final authDetails = Provider.of<Auth>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
 
     return Card(
@@ -111,7 +113,8 @@ class ProductItem extends StatelessWidget {
                       // ColorPalettes.dark,
                     ),
                     onPressed: () async {
-                      data.addAndRemoveFromFavs();
+                      data.addAndRemoveFromFavs(
+                          authDetails.token, authDetails.userId);
                     }),
               ),
             ),

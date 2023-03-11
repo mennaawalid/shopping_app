@@ -19,20 +19,22 @@ class OrderItems {
 
 class Order with ChangeNotifier {
   List<OrderItems> _orders = [];
+  final String token;
+
+  Order(this.token, this._orders);
 
   List<OrderItems> get orders {
     return [..._orders];
   }
 
   Future<void> getAndFetchOrders() async {
-    const url =
-        'https://shopping-ae175-default-rtdb.firebaseio.com/orders.json';
+    final url =
+        'https://shopping-ae175-default-rtdb.firebaseio.com/orders.json?auth=$token';
     final response = await http.get(
       Uri.parse(url),
     );
 
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
-    print(extractedData);
     final List<OrderItems> loadedOrders = [];
     if (extractedData == null) {
       return;
@@ -66,8 +68,8 @@ class Order with ChangeNotifier {
     required double total,
     required List<CartItem> cartProducts,
   }) async {
-    const url =
-        'https://shopping-ae175-default-rtdb.firebaseio.com/orders.json';
+    final url =
+        'https://shopping-ae175-default-rtdb.firebaseio.com/orders.json?auth=$token';
     final timeStamp = DateTime.now();
     try {
       final response = await http.post(

@@ -48,10 +48,11 @@ class MyApp extends StatelessWidget {
               update: (context, auth, previousOrder) {
             return Order(
               auth.token!,
+              auth.userId,
               previousOrder == null ? [] : previousOrder.orders,
             );
           }, create: (context) {
-            return Order('', []);
+            return Order('', '', []);
           })
         ],
         child: Consumer<Auth>(

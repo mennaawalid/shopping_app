@@ -13,6 +13,7 @@ import 'package:shopping/screens/product_in_detail_screen.dart';
 import 'package:shopping/screens/user_products.dart';
 
 import 'screens/products_list.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,8 +33,11 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProxyProvider<Auth, Products>(
             update: (context, auth, previousProducts) {
-              return Products(auth.token!, auth.userId,
-                  previousProducts == null ? [] : previousProducts.items);
+              return Products(
+                auth.token,
+                auth.userId,
+                previousProducts == null ? [] : previousProducts.items,
+              );
             },
             create: (context) {
               return Products('', '', []);
@@ -47,7 +51,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProxyProvider<Auth, Order>(
               update: (context, auth, previousOrder) {
             return Order(
-              auth.token!,
+              auth.token,
               auth.userId,
               previousOrder == null ? [] : previousOrder.orders,
             );
@@ -63,7 +67,15 @@ class MyApp extends StatelessWidget {
                 fontFamily: 'Lato',
                 primarySwatch: Colors.brown,
               ),
-              home: auth.isAuth ? ProductsListScreen() : const AuthScreen(),
+              home: auth.isAuth
+                  ? ProductsListScreen()
+                  : FutureBuilder(
+                      future: auth.tryAutoLogin(),
+                      builder: (context, snapshot) =>
+                          snapshot.connectionState == ConnectionState.waiting
+                              ? const SplashScreen()
+                              : const AuthScreen(),
+                    ),
               routes: {
                 ProductDetails.routeName: (context) => const ProductDetails(),
                 FavoriteProductsList.routeName: (context) =>

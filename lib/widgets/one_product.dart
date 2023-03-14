@@ -114,7 +114,7 @@ class ProductItem extends StatelessWidget {
                     ),
                     onPressed: () async {
                       data.addAndRemoveFromFavs(
-                          authDetails.token, authDetails.userId);
+                          authDetails.token, authDetails.userId!);
                     }),
               ),
             ),

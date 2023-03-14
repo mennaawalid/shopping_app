@@ -111,7 +111,7 @@ class ProductDetails extends StatelessWidget {
             ),
             onPressed: () {
               loadedProduct.addAndRemoveFromFavs(
-                  authDetails.token, authDetails.userId);
+                  authDetails.token, authDetails.userId!);
             },
           ),
           Expanded(

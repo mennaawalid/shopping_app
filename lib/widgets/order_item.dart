@@ -33,48 +33,55 @@ class _OrderItemState extends State<OrderItem> {
               ),
             ),
           ),
-          if (_expanded)
-            SizedBox(
-              height: min(widget.order!.products!.length * 20.0 + 100, 100),
-              child: ListView.builder(
-                itemBuilder: ((context, index) {
-                  return Card(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
+          AnimatedContainer(
+            curve: Curves.ease,
+            height: _expanded
+                ? min(widget.order!.products!.length * 20.0 + 100, 100)
+                : 0,
+            // constraints: BoxConstraints(
+            //   minHeight: _expanded
+            //       ? min(widget.order!.products!.length * 20.0 + 100, 100)
+            //       : 0,
+            // ),
+            duration: const Duration(milliseconds: 300),
+            child: ListView.builder(
+              itemBuilder: ((context, index) {
+                return Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: ListTile(
+                    leading: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: ListTile(
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: AspectRatio(
-                          aspectRatio: 1.7,
-                          child: CachedNetworkImage(
-                            fit: BoxFit.cover,
-                            imageUrl: widget.order!.products![index].imageURl!,
-                          ),
+                      child: AspectRatio(
+                        aspectRatio: 1.7,
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          imageUrl: widget.order!.products![index].imageURl!,
                         ),
                       ),
-                      title: Text(
-                        widget.order!.products![index].name!,
-                        style: const TextStyle(
-                            color: ColorPalettes.darker,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                              "${widget.order!.products![index].quantity.toString()}x \$${widget.order!.products![index].price.toString()}",
-                              style:
-                                  const TextStyle(color: ColorPalettes.dark)),
-                        ],
-                      ),
                     ),
-                  );
-                }),
-                itemCount: widget.order!.products!.length,
-              ),
+                    title: Text(
+                      widget.order!.products![index].name!,
+                      style: const TextStyle(
+                          color: ColorPalettes.darker,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                            "${widget.order!.products![index].quantity.toString()}x \$${widget.order!.products![index].price.toString()}",
+                            style: const TextStyle(color: ColorPalettes.dark)),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+              itemCount: widget.order!.products!.length,
             ),
+          ),
         ],
       ),
     );

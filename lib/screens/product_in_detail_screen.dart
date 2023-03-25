@@ -34,69 +34,85 @@ class ProductDetails extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        leading: const BackButton(color: ColorPalettes.darker),
-        elevation: 0,
-        backgroundColor: const Color.fromARGB(0, 184, 43, 43),
-        title: Text(loadedProduct.name!,
-            style: const TextStyle(
-              color: ColorPalettes.darker,
-            )),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Card(
-              elevation: 0,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.6,
-                child: Hero(
-                  tag: productId,
-                  child: CachedNetworkImage(
-                    fit: BoxFit.scaleDown,
-                    imageUrl: loadedProduct.imageURl!,
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+      // appBar: AppBar(
+      //   leading: const BackButton(color: ColorPalettes.darker),
+      //   elevation: 0,
+      //   backgroundColor: const Color.fromARGB(0, 184, 43, 43),
+      //   title: Text(loadedProduct.name!,
+      //       style: const TextStyle(
+      //         color: ColorPalettes.darker,
+      //       )),
+      // ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: MediaQuery.of(context).size.height * 0.6,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                loadedProduct.name!,
+              ),
+              background: Card(
+                elevation: 0,
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: Hero(
+                    tag: productId,
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: loadedProduct.imageURl!,
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
                   ),
                 ),
               ),
             ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-              padding:
-                  EdgeInsets.all(MediaQuery.of(context).size.height * 0.015),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    flex: 2,
-                    child: Text(
-                      maxLines: 3,
-                      loadedProduct.description!,
-                      style: const TextStyle(
-                        letterSpacing: 0.9,
-                        color: ColorPalettes.darker,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  padding: EdgeInsets.all(
+                      MediaQuery.of(context).size.height * 0.015),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        flex: 2,
+                        child: Text(
+                          maxLines: 3,
+                          loadedProduct.description!,
+                          style: const TextStyle(
+                            letterSpacing: 0.9,
+                            color: ColorPalettes.darker,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                          ),
+                        ),
                       ),
-                    ),
+                      Flexible(
+                        child: Text(
+                          "\$${loadedProduct.price!}",
+                          overflow: TextOverflow.fade,
+                          style: const TextStyle(
+                              color: ColorPalettes.darker,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900),
+                        ),
+                      )
+                    ],
                   ),
-                  Flexible(
-                    child: Text(
-                      "\$${loadedProduct.price!}",
-                      overflow: TextOverflow.fade,
-                      style: const TextStyle(
-                          color: ColorPalettes.darker,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w900),
-                    ),
-                  )
-                ],
-              ),
+                ),
+                const SizedBox(
+                  height: 800,
+                )
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomSheet: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

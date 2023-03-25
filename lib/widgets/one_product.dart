@@ -125,6 +125,11 @@ class ProductItem extends StatelessWidget {
                 child: Hero(
                   tag: data.id!,
                   child: CachedNetworkImage(
+                    placeholder: (context, url) {
+                      return Image.asset(
+                        'assets/images/product-placeholder.png',
+                      );
+                    },
                     fit: BoxFit.fitWidth,
                     imageUrl: data.imageURl!,
                     errorWidget: (context, url, error) =>

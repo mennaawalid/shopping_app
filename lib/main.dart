@@ -11,7 +11,7 @@ import 'package:shopping/screens/favorite_products.dart';
 import 'package:shopping/screens/orders_screen.dart';
 import 'package:shopping/screens/product_in_detail_screen.dart';
 import 'package:shopping/screens/user_products.dart';
-
+import 'helpers/custom_route.dart';
 import 'screens/products_list.dart';
 import 'screens/splash_screen.dart';
 
@@ -66,6 +66,10 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 fontFamily: 'Lato',
                 primarySwatch: Colors.brown,
+                pageTransitionsTheme: PageTransitionsTheme(builders: {
+                  TargetPlatform.android: CustomePageTransitionBuilder(),
+                  TargetPlatform.iOS: CustomePageTransitionBuilder(),
+                }),
               ),
               home: auth.isAuth
                   ? ProductsListScreen()

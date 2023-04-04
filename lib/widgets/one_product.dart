@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopping/constants.dart';
+import '../constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:shopping/providers/auth.dart';
-import 'package:shopping/providers/products.dart';
-import 'package:shopping/screens/product_in_detail_screen.dart';
+import '../providers/auth.dart';
+import '../providers/products.dart';
+import '../screens/product_in_detail_screen.dart';
 
 import '../providers/cart.dart';
 

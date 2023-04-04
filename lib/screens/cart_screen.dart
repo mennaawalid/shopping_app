@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopping/constants.dart';
-import 'package:shopping/providers/cart.dart' show Cart;
-import 'package:shopping/providers/orders.dart';
-import 'package:shopping/widgets/cart_item.dart';
+import '../constants.dart';
+import '../providers/cart.dart' show Cart;
+import '../providers/orders.dart';
+import '../widgets/cart_item.dart';
 
 class CartScreen extends StatelessWidget {
   static const routeName = '/cart';

@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
-import 'package:shopping/constants.dart';
-import 'package:shopping/providers/cart.dart';
-import 'package:shopping/providers/products_provider.dart';
-import 'package:shopping/screens/cart_screen.dart';
+import '../constants.dart';
+import '../providers/cart.dart';
+import '../providers/products_provider.dart';
+import 'cart_screen.dart';
 
 import '../providers/auth.dart';
 

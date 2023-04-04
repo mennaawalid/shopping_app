@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopping/constants.dart';
-import 'package:shopping/screens/orders_screen.dart';
-
-import '../helpers/custom_route.dart';
+import '../constants.dart';
 import '../providers/auth.dart';
 
 class MyDrawer extends StatelessWidget {

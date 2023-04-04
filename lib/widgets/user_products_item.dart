@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopping/providers/products_provider.dart';
-import 'package:shopping/screens/edit_product_screen.dart';
-import 'package:shopping/screens/product_in_detail_screen.dart';
+
+import '../providers/products_provider.dart';
+import '../screens/edit_product_screen.dart';
+import '../screens/product_in_detail_screen.dart';
 
 class UserProductItem extends StatelessWidget {
   final String? name;
@@ -84,7 +85,7 @@ class UserProductItem extends StatelessWidget {
                 );
               },
               icon: const Icon(Icons.delete),
-              color: Theme.of(context).errorColor,
+              color: Theme.of(context).colorScheme.error,
             ),
           ],
         ),

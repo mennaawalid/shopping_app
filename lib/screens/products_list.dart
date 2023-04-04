@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopping/widgets/app_drawer.dart';
-import 'package:shopping/widgets/main_app_bar.dart';
-import 'package:shopping/widgets/products_grid.dart';
+import '../widgets/app_drawer.dart';
+import '../widgets/main_app_bar.dart';
+import '../widgets/products_grid.dart';
 
 import '../providers/products_provider.dart';
 

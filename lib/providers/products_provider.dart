@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:shopping/models/http_exception.dart';
-import 'package:shopping/providers/products.dart';
+import '../models/http_exception.dart';
+import 'products.dart';
 
 import 'package:http/http.dart' as http;
 

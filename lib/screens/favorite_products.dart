@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shopping/widgets/products_grid.dart';
 
 import '../constants.dart';
+import '../widgets/products_grid.dart';
 
 bool _showfav = true;
 

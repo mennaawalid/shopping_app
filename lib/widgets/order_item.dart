@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:shopping/constants.dart';
-import 'package:shopping/providers/orders.dart' as ord;
+import '../constants.dart';
+import '../providers/orders.dart' as ord;
 import 'dart:math';
 
 class OrderItem extends StatefulWidget {

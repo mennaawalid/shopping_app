@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopping/providers/products_provider.dart';
-import 'package:shopping/widgets/one_product.dart';
+import '../providers/products_provider.dart';
+import 'one_product.dart';
 
 class ProductsGrid extends StatelessWidget {
   final bool favornot;

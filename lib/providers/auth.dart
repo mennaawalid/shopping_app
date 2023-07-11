@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -61,7 +63,10 @@ class Auth with ChangeNotifier {
       );
       _autoLogout();
       notifyListeners();
-      final sharedPrefs = await SharedPreferences.getInstance();
+      await Hive.initFlutter();
+
+      var box = await Hive.openBox('testBox');
+      //  final sharedPrefs = await SharedPreferences.getInstance();
       final userData = json.encode(
         {
           'token': _token,
@@ -69,7 +74,9 @@ class Auth with ChangeNotifier {
           'expiryDate': _expiryDate!.toIso8601String(),
         },
       );
-      sharedPrefs.setString('userData', userData);
+      box.put('userData', userData);
+
+      // sharedPrefs.setString('userData', userData);
     } catch (error) {
       rethrow;
     }
@@ -84,18 +91,21 @@ class Auth with ChangeNotifier {
   }
 
   Future<bool> tryAutoLogin() async {
-    final sharedPrefs = await SharedPreferences.getInstance();
-    if (!sharedPrefs.containsKey('userData')) {
+    await Hive.initFlutter();
+
+    var box = await Hive.openBox('testBox');
+
+    // final sharedPrefs = await SharedPreferences.getInstance();
+    if (!box.containsKey('userData')) {
       return false;
     }
-       final extractedUserData =
-        json.decode(sharedPrefs.getString('userData')!) as Map<String, dynamic>;
+    final extractedUserData =
+        json.decode(box.get('userData')!) as Map<String, dynamic>;
     final expiryDate = DateTime.parse(extractedUserData['expiryDate']);
 
     if (expiryDate.isBefore(DateTime.now())) {
       return false;
     }
-
 
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
@@ -115,8 +125,12 @@ class Auth with ChangeNotifier {
     }
 
     notifyListeners();
-    final prefs = await SharedPreferences.getInstance();
-    prefs.clear();
+    await Hive.initFlutter();
+
+    var box = await Hive.openBox('testBox');
+
+    //final prefs = await SharedPreferences.getInstance();
+    box.clear();
   }
 
   void _autoLogout() {

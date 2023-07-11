@@ -60,13 +60,15 @@ class Cart with ChangeNotifier {
       notifyListeners();
     } else {
       _items.putIfAbsent(
-          productId,
-          () => CartItem(
-              cartItemId: DateTime.now().toString(),
-              imageURl: imageURL,
-              name: name,
-              price: price,
-              quantity: 1));
+        productId,
+        () => CartItem(
+          cartItemId: DateTime.now().toString(),
+          imageURl: imageURL,
+          name: name,
+          price: price,
+          quantity: 1,
+        ),
+      );
       notifyListeners();
     }
   }

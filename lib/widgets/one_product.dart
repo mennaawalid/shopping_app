@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../providers/auth.dart';
 import '../providers/products.dart';
 import '../screens/product_in_detail_screen.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../providers/cart.dart';
 
@@ -126,9 +127,18 @@ class ProductItem extends StatelessWidget {
                   tag: data.id!,
                   child: CachedNetworkImage(
                     placeholder: (context, url) {
-                      return Image.asset(
-                        'assets/images/product-placeholder.png',
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                          foregroundDecoration:
+                              const BoxDecoration(color: Colors.grey),
+                        ),
                       );
+
+                      // return Image.asset(
+                      //   'assets/images/product-placeholder.png',
+                      // );
                     },
                     fit: BoxFit.fitWidth,
                     imageUrl: data.imageURl!,
